@@ -14,8 +14,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 값을 데이터베이스가 알아서 증가시키도록 맡김
     private Long id;
 
-    @Column(length = 20, nullable = false, unique=true)
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY) // 필요할 때만 Member 정보를 가져오도록 함.(조금 더 공부)
+    @JoinColumn(nullable = false)
+    private Member member;
 
     @Column(length = 1000, nullable = false)
     private String postContent;
@@ -33,8 +34,8 @@ public class Post {
     // 생성자를 통해 필수 필드 초기화
     // Lombok에서 제공하는 객체를 안전하고 유연하게 생성할 수 있도록 도와주는 디자인 패턴
     @Builder
-    public Post(String username, String postContent) {
-        this.username = username;
+    public Post(Member member, String postContent) {
+        this.member = member;
         this.postContent = postContent;
         this.likes = 0; // 초기 좋아요 0
         this.createdAt = LocalDateTime.now();
@@ -46,5 +47,15 @@ public class Post {
     public void update(String postContent) {
         this.postContent = postContent;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // 좋아요 +1
+    public void addLike() {
+        this.likes++;
+    }
+
+    // 좋아요 -1
+    public void removeLike() {
+        if(likes > 0)  this.likes--;
     }
 }

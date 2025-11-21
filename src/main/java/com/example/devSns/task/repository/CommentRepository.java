@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAlignedCommentByPostId(@Param("id") Long postId);
+
+    List<Comment> findAllByMemberId(Long memberId);
 }
